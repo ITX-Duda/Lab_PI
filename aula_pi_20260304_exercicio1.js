@@ -1,5 +1,8 @@
 //Maria Eduarda Brito
+//RA: 11202420703
+//LISTA 1 - PROCESSAMENTO DA INFORMAÇÃO
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Exercicio 1 
 Dada uma equação de segundo grau no formato ax2 + bx + c = 0,
 Calcule as suas raízes. Crie uma função delta(a, b, c), como descrito abaixo,
@@ -21,6 +24,7 @@ function segundoGrau(a, b, c){
     }
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Exercicio 2
 Crie um programa que lê três números inteiros (A, B e C) no teclado e que
 imprime O MAI0R valor dos três, utilizando:
@@ -42,6 +46,7 @@ function maiorNum(a, b, c){
     return maior;
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Exercicio 3
 Escreve um programa que lê três números inteiros (A, B e C) no teclado.
 Sorteia os valores A, B e C por meio de troca sucessiva de variáveis de modo
@@ -85,16 +90,18 @@ function ordenaNum(a, b, c){
     }
     switch (escolha){
         case "a":
-            console.log(ordem)
+            console.log(ordem);
             break;
         case "b":
-            swapElements(ordem, )
+            [ordem[0], ordem[2]] = [ordem[2], ordem[0]];
+            console.log(ordem);
             break;
         default:
             console.log("Opção inválida. Tente novamente.");
     }
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Exercicio 4
 Faça um programa para determinar a classificação do peso de um
 indivíduo, de acordo com a tabela abaixo:
@@ -103,21 +110,27 @@ o peso e altura digitados como entrada do programa.
 */
 
 function calculoIMC(altura, peso){
-    let IMC = peso/(altura**2);
+    let IMC = peso/((altura/100)**2);
     switch (true){
         case (IMC <= 18.5):
             console.log("IMC: Magro");
-        case (18.5 < IMC <= 25):
+            break;
+        case (IMC > 18.5 && IMC <= 25):
             console.log("IMC: Saudável");
-        case (25 < IMC <= 30):
+            break;
+        case (IMC > 25 && IMC <= 30):
             console.log("IMC: Acima do peso");
-        case (30 < IMC <= 35):
+            break;
+        case (IMC > 30 && IMC <= 35):
             console.log("IMC: Obeso");
+            break;
         case (IMC > 35):
             console.log("IMC: Morbidez");
+            break;
     }
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Exercicio 5
  Faça um programa para determinar o conceito final de um(a) aluno(a)
 dadas as três notas das provas (P1 com peso 3, P2 com peso 3 e P3 com peso
@@ -128,59 +141,84 @@ function determinarNotas(nota1, nota2, nota3){
     nota2 *= 3;
     nota3 *= 4;
 
-    const media = (nota1 + nota2 + nota3)/3;
+    const media = (nota1 + nota2 + nota3)/10;
 
     if (media >= 8.5){
         console.log("Conceito A");
-    }else if(media >= 8.5){
+    }else if (media >= 8.5){
         console.log("Conceito B");
+    }else if (media >= 7){
+        console.log("Conceito C");
+    }else if (media >= 5.5){
+        console.log("Conceito D");
+    }else{
+        console.log("Reprovado! Conceito F");
     }
 }
 
 const prompt = require('prompt-sync')({sigint: true});
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// FUNÇÃO PRINCIPAL
 function main() {
     let numeros;
     let a;
     let b;
     let c;
-    console.log("MENU:")
-    console.log("\n Exercicio 1 - Função de segundo grau. \n Exercicio 2 - Definir o maior. \n Exercicio 3 - Ordena números. \n Exercicio 4 - Indice de Massa Corporal. \n Exercicio 5 - Calculo de conceito. \n 6. Sair")
-    let escolha = prompt("Escolha uma opção:" );
-    switch (escolha){
-        case "1":
-            numeros = prompt("Insira os valores de a, b e c, separados por vírgula:");
-            [a, b, c] = numeros.split(",").map(Number);
-            segundoGrau(a, b, c);
+    let i = 1;
+    while(i){
+        console.log("-".repeat(45));
+        console.log(`     🚀 PAINEL DE EXERCÍCIOS - LISTA 1
+${"-".repeat(45)}
+
+[1] Função de Segundo Grau
+[2] Definir o Maior
+[3] Ordenar Números
+[4] IMC (Índice de Massa Corporal)
+[5] Cálculo de Conceito
+
+[0] Sair do Programa`);
+        console.log("-".repeat(45));
+
+        let escolha = prompt("Digite o número da sua opção:");
+        switch (escolha){
+            case "1":
+                numeros = prompt("Insira os valores de a, b e c da função, separados por vírgula:");
+                [a, b, c] = numeros.split(",").map(Number);
+                segundoGrau(a, b, c);
+                break;
+            case "2":
+                numeros = prompt("Insira os 3 números a serem comparados, separados por vírgula:");
+                [a, b, c] = numeros.split(",").map(Number);
+                maiorNum(a, b, c);
+                break;
+            case "3":
+                numeros = prompt("Insira os 3 valores a serem ordenados, separados por vírgula:");
+                [a, b, c] = numeros.split(",").map(Number);
+                ordenaNum(a, b, c);
+                break;
+            case "4":
+                numeros = prompt("Insira a altura e o peso, separados por vírgula:");
+                [a, b] = numeros.split(",").map(Number);
+                calculoIMC(a, b);
+                break;
+            case "5":
+                numeros = prompt("Insira o valor das 3 provas para obter o conceito, separados por vírgula:");
+                [a, b, c] = numeros.split(",").map(Number);
+                determinarNotas(a, b,c);
+                break;
+            case "6":
+                console.log("Saindo do programa.");
+                break;
+            default:
+                console.log("Opção inválida. Tente novamente.");
+        }
+        let continua = prompt("Deseja escolher outra opção? [s/n]");
+        if ( continua === 'n'){
+            i = 0;
             break;
-        case "2":
-            numeros = prompt("Insira os 3 números a serem comparados, separados por vírgula:");
-            [a, b, c] = numeros.split(",").map(Number);
-            maiorNum(a, b, c);
-            break;
-        case "3":
-            numeros = prompt("Insira os 3 valores a serem ordenados, separados por vírgula:");
-            [a, b, c] = numeros.split(",").map(Number);
-            ordenaNum(a, b, c);
-            break;
-        case "4":
-            numeros = prompt("Insira os 3 valores a serem ordenados, separados por vírgula:");
-            [a, b, c] = numeros.split(",").map(Number);
-            calculoIMC(a, b, c);
-            break;
-        case "5":
-            numeros = prompt("Insira os 3 valores a serem ordenados, separados por vírgula:");
-            [a, b, c] = numeros.split(",").map(Number);
-            determinarNotas(a, b,c);
-            break;
-        case "6":
-            console.log("Saindo do programa.");
-            break;
-        default:
-            console.log("Opção inválida. Tente novamente.");
+        }
     }
-    
+    console.log("Tchauzinho...");
 }
-
-
 main();
