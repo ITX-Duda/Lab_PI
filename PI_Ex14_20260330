@@ -1,0 +1,54 @@
+# Processamento da Informação - Aula atipica
+# Professor: Fernando Tuebl
+# Matrizes - multiplicação 
+# Exercicio 14
+
+""" 
+EXERCÍCIO 13
+
+Problema:
+Faça um programa que cria duas matrizes aleatórias e imprima o resultado da multiplicação delas.
+"""
+
+import random
+"""
+#random.seed(10) #Isso serve para se plantar uma "semente" e ele basicamente gera o mesmo numero, como se fixasse ali
+print(random.random()) # Número completamente aleatorio
+print(random.randint(1,10)) # Número inteiro aleatorio entre 1 e 10
+print(random.randrange(1,10)) # Número inteiro aleatorio de 1 até 10
+"""
+def gerar_matriz():
+    qnt_linha, qnt_coluna, menor_valor, maior_valor = map(int,input("Entre os valores da matriz 1, separados por espaços: linha, coluna, menor e maior valor da matriz: ").split())
+    matriz = []
+    for i in range (qnt_linha):
+        linhas = []
+        for j in range (qnt_coluna):
+            linhas.append(random.randint(menor_valor, maior_valor))
+        matriz.append(linhas)
+
+    for x in range(qnt_linha):
+        for y in range(qnt_coluna):
+            print(matriz[x][y], end=" ")
+        print()
+    return matriz
+
+semente = int(input("Digite o valor da semente: "))
+random.seed(semente)
+print("\n Matriz 1:")
+matriz_1 = gerar_matriz()
+print('\n Matriz 2:')
+matriz_2 = gerar_matriz()
+print("\n Matriz 3:")
+matriz_3 = []
+for i in range(len(matriz_1)):
+    linhas = []
+    for j in range(len(matriz_2[0])):
+        soma = 0
+        for k in range(len(matriz_2)):
+            soma += matriz_1[i][k] * matriz_2[k][j]
+        
+        linhas.append(soma)
+        print(soma, end=" ")
+    
+    matriz_3.append(linhas)
+    print()
