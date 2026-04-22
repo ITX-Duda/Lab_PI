@@ -1,0 +1,1014 @@
+
+## Manipulação de Matrizes, Caça-Palavras com Recursão e Fundamentos de Python
+
+---
+
+## Índice
+
+- [[#1 Conceitos Fundamentais]]
+  - [[#1.1 O que é uma Matriz em Python]]
+  - [[#1.2 Funções Essenciais para Matrizes]]
+- [[#2 Fundamentos da Linguagem (Aulas 01 a 04)]]
+  - [[#2.1 Tipos de Dados Primitivos]]
+  - [[#2.2 Entrada e Saída – `input`, `split`, `map`]]
+  - [[#2.3 Operadores Lógicos e Relacionais]]
+- [[#3 Estruturas de Repetição (Aulas 05 a 07)]]
+  - [[#3.1 Laço `for`]]
+  - [[#3.2 Laço `while`]]
+  - [[#3.3 Controle de Fluxo (`break` e `continue`)]]
+- [[#4 Funções e Modularização (Aula 02)]]
+  - [[#4.1 Anatomia de uma Função]]
+  - [[#4.2 Escopo de Variáveis]]
+  - [[#4.3 Passagem de Parâmetros]]
+- [[#5 Strings e Laços (Aula 08)]]
+  - [[#5.1 Processamento Essencial]]
+  - [[#5.2 Métodos Úteis de String]]
+- [[#6 Listas Unidimensionais – Vetores (Aulas 09 a 12)]]
+  - [[#6.1 Operações Básicas]]
+  - [[#6.2 List Comprehension]]
+  - [[#6.3 `enumerate`]]
+- [[#7 Matrizes – Listas Bidimensionais (Aulas 13 a 16)]]
+  - [[#7.1 Conceito de Linha e Coluna]]
+  - [[#7.2 Criação Correta de Matrizes]]
+  - [[#7.3 Percorrimento Padrão]]
+  - [[#7.4 Validação de Índices]]
+  - [[#7.5 Leitura de Matriz do Teclado]]
+  - [[#7.6 Exibição Formatada]]
+- [[#8 Recursão (Aula 17)]]
+  - [[#8.1 Modelo Mental]]
+  - [[#8.2 Exemplo Didático]]
+  - [[#8.3 Recursão no Simulado]]
+- [[#9 Análise Detalhada das Funções do Simulado]]
+  - [[#9.1 `eh_matriz`]]
+  - [[#9.2 `busca_letra`]]
+  - [[#9.3 `verifica_palavra`]]
+  - [[#9.4 `caca_palavra`]]
+- [[#10 Possíveis Variações de Questões]]
+- [[#11 Dicas de Depuração e Armadilhas Comuns]]
+- [[#12 Tabela Resumo de Funções Embutidas]]
+- [[#13 Código Final Comentado (Integrando Tudo)]]
+
+---
+
+## 1. Conceitos Fundamentais
+
+### 1.1 O que é uma Matriz em Python?
+
+Uma matriz é representada como uma **lista de listas**:
+
+- Cada lista interna é uma **linha**.
+- Todas as linhas devem ter o **mesmo número de elementos (colunas)**.
+
+```python
+M = [
+    [1, 2, 3, 4],   # linha 0
+    [5, 6, 7, 8],   # linha 1
+    [9, 10, 11, 12] # linha 2
+]
+```
+
+**Índices:**
+
+- Linha: `0` até `len(M) - 1`
+- Coluna: `0` até `len(M[0]) - 1`
+- Acesso ao elemento: `M[i][j]`
+
+### 1.2 Funções Essenciais para Matrizes
+
+| Função               | Descrição                                      |
+| -------------------- | ---------------------------------------------- |
+| `len(M)`             | Número de linhas                               |
+| `len(M[0])`          | Número de colunas (se a matriz não for vazia)  |
+| `M.append(nova_linha)` | Adiciona uma linha ao final                   |
+| `range(len(M))`      | Itera sobre os índices das linhas              |
+
+---
+
+## 2. Fundamentos da Linguagem (Aulas 01 a 04)
+
+### 2.1 Tipos de Dados Primitivos
+
+| Tipo    | Exemplo         | Operações Comuns                         |
+| ------- | --------------- | ---------------------------------------- |
+| `int`   | `10`, `-5`      | `+ - * / // % **`                        |
+| `float` | `3.14`, `-0.5`  | mesmas, cuidado com `.`                  |
+| `str`   | `"ABC"`, `'a'`  | `+` (concatena), `*` (repete), `in`, `[]` |
+| `bool`  | `True`, `False` | `and`, `or`, `not`                       |
+
+### 2.2 Entrada e Saída – `input`, `split`, `map`
+
+- **Saída:** `print(var1, var2, sep=" ", end="\n")`
+- **Entrada:** `input("Mensagem: ")` → **sempre retorna string**. Use `int()` ou `float()` para converter.
+
+#### A Mágica do `split()` e `map()` (Essencial para a Prova!)
+
+Quando o usuário digita vários valores em uma única linha, ex: `10 20 30 40`.
+
+```python
+# 1. Leitura como string
+linha = input()                     # "10 20 30 40"
+
+# 2. split() quebra a string nos espaços → lista de strings
+partes = linha.split()              # ['10', '20', '30', '40']
+
+# 3. map() aplica int() a cada elemento; list() converte o resultado
+numeros = list(map(int, partas))    # [10, 20, 30, 40]
+```
+
+**Forma compacta (decore para a prova):**
+```python
+valores = list(map(int, input().split()))
+```
+
+#### Lendo uma Matriz do Teclado
+
+Exemplo de entrada:
+```
+3 4
+1 2 3 4
+5 6 7 8
+9 0 1 2
+```
+
+Código:
+```python
+linhas, colunas = map(int, input().split())
+M = []
+for _ in range(linhas):
+    linha = list(map(int, input().split()))
+    M.append(linha)
+```
+
+> ⚠️ **Evite `eval(input())`** – é perigoso e pode perder pontos na prova.
+
+### 2.3 Operadores Lógicos e Relacionais
+
+| Operador | Significado    | Exemplo Verdadeiro |
+| -------- | -------------- | ------------------ |
+| ==       | Igual          | `5 == 5`           |
+| `!=`     | Diferente      | `5 != 3`           |
+| `>`      | Maior          | `10 > 2`           |
+| `<`      | Menor          | `2 < 10`           |
+| `>=`     | Maior ou igual | `5 >= 5`           |
+| `<=`     | Menor ou igual | `3 <= 5`           |
+| `and`    | E lógico       | `True and True`    |
+| `or`     | Ou lógico      | `True or False`    |
+| `not`    | Negação        | `not False`        |
+
+**Estrutura condicional clássica:**
+```python
+if condicao:
+    # bloco se verdadeiro
+elif outra_condicao:
+    # bloco alternativo
+else:
+    # bloco caso contrário
+```
+
+---
+
+## 3. Estruturas de Repetição (Aulas 05 a 07)
+
+### 3.1 Laço `for`
+
+Usado para percorrer sequências (Strings, Listas, Matrizes).
+
+```python
+# Percorrimento de matriz
+for i in range(linhas):
+    for j in range(colunas):
+        print(M[i][j], end=" ")
+    print()
+```
+
+### 3.2 Laço `while`
+
+Usado quando o número de repetições é desconhecido. **Cuidado:** atualize a variável de controle para evitar loops infinitos.
+
+### 3.3 Controle de Fluxo (`break` e `continue`)
+
+- `break`: sai do laço imediatamente.
+- `continue`: pula para a próxima iteração.
+
+---
+
+## 4. Funções e Modularização (Aula 02)
+
+### 4.1 Anatomia de uma Função
+
+```python
+def nome_da_funcao(param1: tipo, param2: tipo = valor_default) -> tipo_retorno:
+    """
+    DOCSTRING: Explica o que a função faz. (Isso cai na prova teórica!)
+    """
+    resultado = param1 + param2
+    return resultado
+```
+
+### 4.2 Escopo de Variáveis
+
+- **Local:** existe apenas dentro da função.
+- **Global:** definida fora de todas as funções. Para modificar uma global dentro de uma função, use `global nome_var` (evite na prova).
+
+### 4.3 Passagem de Parâmetros
+
+- **Imutáveis (int, str, bool):** passados por **valor** (cópia).
+- **Mutáveis (list):** passados por **referência**. Se você alterar `M[0][0]` dentro da função, a matriz original será alterada.
+
+---
+
+## 5. Strings e Laços (Aula 08)
+
+### 5.1 Processamento Essencial
+
+```python
+palavra = "Python"
+
+primeira = palavra[0]      # 'P'
+ultima   = palavra[-1]     # 'n'
+resto    = palavra[1:]     # 'ython'  → crucial para recursão
+
+for letra in palavra:
+    print(letra)
+
+for i in range(len(palavra)):
+    print(f"Índice {i}: {palavra[i]}")
+```
+
+### 5.2 Métodos Úteis de String
+
+| Método            | Descrição                                    | Exemplo                       |
+| ----------------- | -------------------------------------------- | ----------------------------- |
+| `strip()`         | Remove espaços das extremidades               | `"  ABC  ".strip()` → `"ABC"` |
+| `upper()`         | Converte para maiúsculas                      | `"abc".upper()` → `"ABC"`     |
+| `lower()`         | Converte para minúsculas                      | `"XYZ".lower()` → `"xyz"`     |
+| `replace(a,b)`    | Substitui `a` por `b`                         | `"banana".replace("na","ne")` |
+| `find(sub)`       | Índice da 1ª ocorrência (-1 se não achar)     | `"casa".find("sa")` → `1`     |
+| `count(sub)`      | Conta ocorrências                             | `"arara".count("a")` → `3`    |
+| `split(sep)`      | Divide a string em uma lista                  | `"a,b,c".split(",")` → `['a','b','c']` |
+| `join(lista)`     | Junta elementos da lista com um separador     | `"-".join(['a','b'])` → `"a-b"` |
+
+---
+
+## 6. Listas Unidimensionais – Vetores (Aulas 09 a 12)
+
+### 6.1 Operações Básicas
+
+```python
+lista = [10, 20, 30]
+lista.append(40)        # [10, 20, 30, 40]
+lista.insert(1, 15)     # [10, 15, 20, 30, 40]
+elemento = lista.pop()  # remove e retorna o último (40)
+lista.remove(20)        # remove o primeiro 20 encontrado
+tamanho = len(lista)    # 4
+```
+
+### 6.2 List Comprehension
+
+Forma concisa de criar listas.
+
+```python
+quadrados = [x**2 for x in range(10)]
+pares = [x for x in range(20) if x % 2 == 0]
+
+# Criação correta de uma matriz 3x3 com zeros:
+M = [[0 for _ in range(3)] for _ in range(3)]
+```
+
+### 6.3 `enumerate`
+
+Obtém índice e valor simultaneamente.
+
+```python
+frutas = ["maçã", "banana", "uva"]
+for i, fruta in enumerate(frutas):
+    print(f"Índice {i}: {fruta}")
+```
+
+---
+
+## 7. Matrizes – Listas Bidimensionais (Aulas 13 a 16)
+
+### 7.1 Conceito de Linha e Coluna
+
+Sempre pense: `Matriz[i][j]`
+
+- **i** : índice da **linha** (vertical).
+
+- **j** : índice da **coluna** (horizontal).
+
+### 7.2 Visualização 
+
+
+```mermaid
+
+graph TD
+
+subgraph Matriz 3x4
+
+L0["Linha 0: [0,0] [0,1] [0,2] [0,3]"]
+
+L1["Linha 1: [1,0] [1,1] [1,2] [1,3]"]
+
+L2["Linha 2: [2,0] [2,1] [2,2] [2,3]"]
+
+end
+
+style L0 fill:#f9f,stroke:#333
+
+style L1 fill:#bbf,stroke:#333
+
+style L2 fill:#bfb,stroke:#333
+
+```
+
+
+**Acesso:**
+
+- `M[1][2]` → elemento na linha 1, coluna 2.
+
+- `len(M)` → 3 (linhas)
+
+- `len(M[0])` → 4 (colunas)
+
+### 7.3 Criação Correta de Matrizes
+
+❌ **ERRADO:** `M = [[0] * 3] * 3` → todas as linhas são a mesma lista na memória.
+
+✅ **CERTO:**
+
+```python
+
+linhas, colunas = 3, 4
+
+M = [[0] * colunas for _ in range(linhas)]
+
+```
+
+### 7.4 Percorrimento Padrão
+
+```python
+
+for i in range(len(M)):
+
+for j in range(len(M[0])):
+
+print(M[i][j], end=" ")
+
+print()
+
+```
+### 7.5 Validação de Índices
+
+```python
+
+if 0 <= i < len(M) and 0 <= j < len(M[0]):
+
+valor = M[i][j]
+
+```
+### 7.6 Leitura de Matriz do Teclado
+
+```python
+linhas, colunas = map(int, input().split())
+
+M = []
+
+for _ in range(linhas):
+
+linha = list(map(int, input().split()))
+
+M.append(linha)
+
+```
+
+### 7.7 Exibição Formatada
+```python
+
+def exibe_matriz(M):
+
+for i in range(len(M)):
+
+for j in range(len(M[0])):
+
+print(f"{M[i][j]:^3}", end=" ")
+
+print()
+
+```
+### 7.8 Exemplos Práticos Adicionais com Matrizes
+
+#### Soma de todos os elementos
+```python
+
+def soma_total(M):
+
+total = 0
+
+for i in range(len(M)):
+
+for j in range(len(M[0])):
+
+total += M[i][j]
+
+return total
+
+```
+#### Soma de cada linha
+```python
+
+def soma_linhas(M):
+
+somas = []
+
+for i in range(len(M)):
+
+soma_linha = 0
+
+for j in range(len(M[0])):
+
+soma_linha += M[i][j]
+
+somas.append(soma_linha)
+
+return somas
+
+```
+#### Diagonal principal (matriz quadrada)
+
+```python
+
+def diagonal_principal(M):
+
+diag = []
+
+for i in range(len(M)):
+
+diag.append(M[i][i])
+
+return diag
+
+```
+
+**Visualização da diagonal principal:**
+
+```mermaid
+
+graph TD
+
+subgraph Diagonal Principal
+
+D0["[0,0]"]
+
+D1["[1,1]"]
+
+D2["[2,2]"]
+
+end
+
+```
+
+#### Matriz identidade
+```python
+
+def identidade(n):
+
+I = [[0]*n for _ in range(n)]
+
+for i in range(n):
+
+I[i][i] = 1
+
+return I
+
+```
+#### Busca do maior elemento e sua posição
+```python
+
+def maior_elemento(M):
+
+maior = M[0][0]
+
+pos = [0,0]
+
+for i in range(len(M)):
+
+for j in range(len(M[0])):
+
+if M[i][j] > maior:
+
+maior = M[i][j]
+
+pos = [i, j]
+
+return maior, pos
+
+```
+#### Vizinhança de uma célula (8 direções)
+```python
+def vizinhos(M, i, j):
+
+for di in [-1, 0, 1]:
+
+for dj in [-1, 0, 1]:
+
+if di == 0 and dj == 0:
+
+continue
+
+ni, nj = i+di, j+dj
+
+if 0 <= ni < len(M) and 0 <= nj < len(M[0]):
+
+print(f"Vizinho em ({ni},{nj}): {M[ni][nj]}")
+
+```
+**Visualização das 8 direções no Mermaid:**
+
+```mermaid
+
+flowchart TD
+
+C["(i, j)"]
+
+C --> NW["(-1, -1)"]
+
+C --> N["(-1, 0)"]
+
+C --> NE["(-1, 1)"]
+
+C --> W["(0, -1)"]
+
+C --> E["(0, 1)"]
+
+C --> SW["(1, -1)"]
+
+C --> S["(1, 0)"]
+
+C --> SE["(1, 1)"]
+
+  
+
+NW ~~~ N ~~~ NE
+
+W ~~~ C ~~~ E
+
+SW ~~~ S ~~~ SE
+
+```
+
+---  
+## 8. Recursão (Aula 17)
+
+### 8.1 Modelo Mental
+
+Uma função recursiva resolve um problema resolvendo uma **versão menor do mesmo problema**.
+
+- **Caso Base:** condição de parada (não chama recursão).
+
+- **Passo Recursivo:** a função chama a si mesma com um parâmetro modificado.
+
+### 8.2 Exemplos Didáticos de Recursão
+
+#### 8.2.1 Fatorial
+
+```python
+
+def fatorial(n):
+
+# Caso base: 0! = 1
+
+if n == 0:
+
+return 1
+
+# Passo recursivo: n! = n * (n-1)!
+
+return n * fatorial(n-1)
+
+  
+
+# Teste:
+
+print(fatorial(5)) # 120
+
+```
+
+**Execução passo a passo para `fatorial(3)`:**
+
+```
+
+fatorial(3) → 3 * fatorial(2)
+
+fatorial(2) → 2 * fatorial(1)
+
+fatorial(1) → 1 * fatorial(0)
+
+fatorial(0) → 1
+
+fatorial(1) → 1 * 1 = 1
+
+fatorial(2) → 2 * 1 = 2
+
+fatorial(3) → 3 * 2 = 6
+
+```
+
+#### 8.2.2 Sequência de Fibonacci
+
+```python
+
+def fibonacci(n):
+
+# Casos base: fib(0)=0, fib(1)=1
+
+if n == 0:
+
+return 0
+
+if n == 1:
+
+return 1
+
+# Passo recursivo: fib(n) = fib(n-1) + fib(n-2)
+
+return fibonacci(n-1) + fibonacci(n-2)
+
+  
+
+# Teste:
+
+print(fibonacci(6)) # 8
+
+```
+
+**⚠️ Observação:** Esta versão é ineficiente para `n` grande (muitas chamadas repetidas). Para prova, serve como exemplo didático.
+
+#### 8.2.3 Soma dos elementos de uma lista
+```python
+
+def soma_lista(lista):
+
+# Caso base: lista vazia → soma = 0
+
+if len(lista) == 0:
+
+return 0
+
+# Passo recursivo: primeiro elemento + soma do resto
+
+return lista[0] + soma_lista(lista[1:])
+
+print(soma_lista([2, 4, 6])) # 12
+
+```
+
+#### 8.2.4 Verificar se uma palavra é palíndromo
+```python
+
+def eh_palindromo(palavra):
+
+# Caso base: palavra com 0 ou 1 letra → é palíndromo
+
+if len(palavra) <= 1:
+
+return True
+
+# Se primeira e última letras forem diferentes, não é
+
+if palavra[0] != palavra[-1]:
+
+return False
+
+# Passo recursivo: verificar o miolo
+
+return eh_palindromo(palavra[1:-1])
+
+  
+
+print(eh_palindromo("arara")) # True
+
+print(eh_palindromo("python")) # False
+
+```
+#### 8.2.5 Busca binária recursiva
+```python
+
+def busca_binaria(lista, alvo, inicio, fim):
+
+if inicio > fim:
+
+return -1 # não encontrado
+
+meio = (inicio + fim) // 2
+
+if lista[meio] == alvo:
+
+return meio
+
+elif alvo < lista[meio]:
+
+return busca_binaria(lista, alvo, inicio, meio-1)
+
+else:
+
+return busca_binaria(lista, alvo, meio+1, fim)
+
+
+# Uso:
+
+dados = [2, 5, 8, 12, 16, 23, 38, 56]
+
+pos = busca_binaria(dados, 23, 0, len(dados)-1)
+
+print(pos) # 5
+
+```
+
+#### 8.2.6 Torres de Hanói
+```python
+
+def hanoi(n, origem, destino, auxiliar):
+
+if n == 1:
+
+print(f"Mover disco 1 de {origem} para {destino}")
+
+return
+
+hanoi(n-1, origem, auxiliar, destino)
+
+print(f"Mover disco {n} de {origem} para {destino}")
+
+hanoi(n-1, auxiliar, destino, origem)
+
+# Exemplo com 3 discos:
+
+hanoi(3, 'A', 'C', 'B')
+
+```
+
+### 8.3 Recursão no Simulado (Caça-Palavras)
+```python
+
+def verifica_palavra(M, i, j, palavra, di, dj):
+
+if len(palavra) == 0: # Caso base: sucesso
+
+return True
+
+if not (0 <= i < len(M) and 0 <= j < len(M[0])): # Fora da matriz
+
+return False
+
+if M[i][j] == palavra[0]:
+
+# Chamada recursiva com o restante da palavra e posição avançada
+
+return verifica_palavra(M, i+di, j+dj, palavra[1:], di, dj)
+
+return False
+
+```
+
+---
+
+## 9. Análise Detalhada das Funções do Simulado
+
+### 9.1 `eh_matriz`
+
+```python
+def eh_matriz(M: list) -> bool:
+    if not isinstance(M, list) or len(M) == 0:
+        return False
+    if not all(isinstance(linha, list) for linha in M):
+        return False
+    colunas_ref = len(M[0])
+    for linha in M:
+        if len(linha) != colunas_ref:
+            return False
+    return True
+```
+
+**Casos de teste:**
+
+| Entrada                | Saída    |
+| ---------------------- | -------- |
+| `[[1,2],[3,4]]`        | `True`   |
+| `[[1,2],[3]]`          | `False`  |
+| `[]`                   | `False`  |
+| `[[1,2], "abc"]`       | `False`  |
+
+### 9.2 `busca_letra`
+
+```python
+def busca_letra(M: list, item) -> list:
+    if not eh_matriz(M):
+        return []
+    ocorrencias = []
+    for i in range(len(M)):
+        for j in range(len(M[i])):
+            if M[i][j] == item:
+                ocorrencias.append([i, j])
+    return ocorrencias
+```
+
+### 9.3 `verifica_palavra`
+
+```python
+def verifica_palavra(M, i, j, palavra, direcao_i, direcao_j):
+    if len(palavra) == 0:
+        return True
+    if not (0 <= i < len(M) and 0 <= j < len(M[0])):
+        return False
+    if M[i][j] == palavra[0]:
+        return verifica_palavra(M, i+direcao_i, j+direcao_j, palavra[1:], direcao_i, direcao_j)
+    return False
+```
+
+### 9.4 `caca_palavra`
+
+```python
+def caca_palavra(M: list, palavra: str) -> list:
+    if not eh_matriz(M) or not palavra:
+        return None
+    candidatos = busca_letra(M, palavra[0])
+    direcoes = [(-1,-1), (-1,0), (-1,1),
+                (0,-1),           (0,1),
+                (1,-1),  (1,0),   (1,1)]
+    for i, j in candidatos:
+        for di, dj in direcoes:
+            if verifica_palavra(M, i, j, palavra, di, dj):
+                return [i, j]
+    return None
+```
+
+---
+
+## 10. Possíveis Variações de Questões
+
+### 🔄 Retornar **todas** as ocorrências
+
+```python
+def caca_palavra_todas(M, palavra):
+    resultados = []
+    candidatos = busca_letra(M, palavra[0])
+    for i, j in candidatos:
+        for di, dj in direcoes:
+            if verifica_palavra(M, i, j, palavra, di, dj):
+                resultados.append([i, j])
+    return resultados
+```
+
+### 🔄 Ignorar maiúsculas/minúsculas
+
+```python
+if M[i][j].upper() == palavra[0].upper():
+    # ...
+```
+
+### 🔄 Verificar se a matriz é quadrada
+
+```python
+def eh_quadrada(M):
+    return eh_matriz(M) and len(M) == len(M[0])
+```
+
+### 🔄 Matriz transposta
+
+```python
+def transposta(M):
+    if not eh_matriz(M):
+        return []
+    L, C = len(M), len(M[0])
+    T = [[0]*L for _ in range(C)]
+    for i in range(L):
+        for j in range(C):
+            T[j][i] = M[i][j]
+    return T
+```
+
+### 🔄 Verificar se é simétrica
+
+```python
+def eh_simetrica(M):
+    if not eh_matriz(M) or len(M) != len(M[0]):
+        return False
+    n = len(M)
+    for i in range(n):
+        for j in range(i+1, n):
+            if M[i][j] != M[j][i]:
+                return False
+    return True
+```
+
+---
+
+## 11. Dicas de Depuração e Armadilhas Comuns
+
+- **Índices fora dos limites:** sempre verifique `0 <= i < len(M) and 0 <= j < len(M[0])`.
+- **Matriz vazia:** `len(M) == 0` → não existe `M[0]`.
+- **Recursão infinita:** a palavra diminui a cada chamada (`palavra[1:]`).
+- **Cópia de listas:** use `[[0]*colunas for _ in range(linhas)]`, nunca `[[0]*colunas]*linhas`.
+- **Ordem das direções:** para a *primeira* ocorrência, a ordem dos laços importa.
+
+---
+
+## 12. Tabela Resumo de Funções Embutidas
+
+| Função           | Descrição                          | Exemplo                      |
+| ---------------- | ---------------------------------- | ---------------------------- |
+| `len(x)`         | Tamanho de lista/string            | `len("casa")` → 4            |
+| `range(n)`       | Sequência de 0 a n-1               | `list(range(3))` → `[0,1,2]` |
+| `type(x)`        | Tipo do objeto                     | `type(10)` → `<class 'int'>` |
+| `isinstance(x,t)`| Verifica se é do tipo `t`          | `isinstance(10, int)` → True |
+| `sum(lista)`     | Soma os elementos                  | `sum([1,2,3])` → 6           |
+| `max(lista)`     | Maior valor                        | `max([1,5,2])` → 5           |
+| `min(lista)`     | Menor valor                        | `min([1,5,2])` → 1           |
+| `abs(x)`         | Valor absoluto                     | `abs(-5)` → 5                |
+| `round(x, n)`    | Arredonda com `n` casas decimais   | `round(3.1415, 2)` → 3.14    |
+
+---
+
+## 13. Código Final Comentado (Integrando Tudo)
+
+```python
+# ------------------------------------------------------------
+# FUNDAMENTO: Tipagem, Listas e Condicionais
+# ------------------------------------------------------------
+def eh_matriz(M: list) -> bool:
+    """Verifica se M é uma matriz válida (lista de listas com colunas consistentes)."""
+    if not isinstance(M, list) or len(M) == 0:
+        return False
+    if not all(isinstance(linha, list) for linha in M):
+        return False
+    colunas_ref = len(M[0])
+    for linha in M:
+        if len(linha) != colunas_ref:
+            return False
+    return True
+
+# ------------------------------------------------------------
+# FUNDAMENTO: Laços Aninhados e Acumuladores
+# ------------------------------------------------------------
+def busca_letra(M: list, item) -> list:
+    """Retorna todas as posições [linha, coluna] onde 'item' aparece em M."""
+    if not eh_matriz(M):
+        return []
+    ocorrencias = []
+    for i in range(len(M)):
+        for j in range(len(M[i])):
+            if M[i][j] == item:
+                ocorrencias.append([i, j])
+    return ocorrencias
+
+# ------------------------------------------------------------
+# FUNDAMENTO: Recursão, Fatiamento de String e Limites
+# ------------------------------------------------------------
+def verifica_palavra(M, i, j, palavra, di, dj):
+    """Verifica recursivamente se 'palavra' existe a partir de (i,j) na direção (di,dj)."""
+    if len(palavra) == 0:                     # Caso base
+        return True
+    if not (0 <= i < len(M) and 0 <= j < len(M[0])):  # Limites
+        return False
+    if M[i][j] == palavra[0]:
+        return verifica_palavra(M, i+di, j+dj, palavra[1:], di, dj)
+    return False
+
+# ------------------------------------------------------------
+# FUNDAMENTO: Integração e Teste de Múltiplas Hipóteses (8 direções)
+# ------------------------------------------------------------
+def caca_palavra(M, palavra):
+    """Encontra a posição inicial da primeira ocorrência da palavra na matriz."""
+    if not eh_matriz(M) or not palavra:
+        return None
+    candidatos = busca_letra(M, palavra[0])
+    direcoes = [(-1,-1), (-1,0), (-1,1),
+                (0,-1),           (0,1),
+                (1,-1),  (1,0),   (1,1)]
+    for i, j in candidatos:
+        for di, dj in direcoes:
+            if verifica_palavra(M, i, j, palavra, di, dj):
+                return [i, j]
+    return None
+
+# ============================================================
+# EXEMPLO DE ENTRADA DE DADOS (COMO CAI NA PROVA)
+# ============================================================
+if __name__ == "__main__":
+    print("Digite as dimensões da matriz (linhas colunas):")
+    L, C = map(int, input().split())
+    M = []
+    print(f"Digite as {L} linhas da matriz (letras separadas por espaço):")
+    for _ in range(L):
+        linha = input().split()
+        M.append(linha)
+    palavra = input("Digite a palavra a ser buscada: ")
+    pos = caca_palavra(M, palavra)
+    if pos:
+        print(f"Palavra encontrada na posição {pos}")
+    else:
+        print("Palavra não encontrada.")
+```
+
+---
